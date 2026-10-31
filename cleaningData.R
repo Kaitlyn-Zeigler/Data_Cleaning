@@ -42,7 +42,7 @@ clean_df <- df |>
   #Establish comma as name delimiter in Producer(s)
   mutate(`Producer(s)` = str_replace_all(`Producer(s)`, ",? and|,? &", ", ")) |> 
   
-  #
+  #Split Musical column into Musical_Name, Book_By, Music_By, and Lyrics_By
   mutate(Musical_Name=str_split_i(Musical, "(\\(TIE|Book,|Based|Book &|Book by|Book and|Story|Directed|Conceived|Music by|Music &|Choreography)",1)) |> 
   mutate(Book_By = str_replace_all(str_split_i(Musical, "(Book by|Book and Lyrics by|Book & Music by|Book & Lyrics by| ?Book, Music,? & Lyrics by|Book & New Lyrics by)", 2) |> 
            str_split_i("(, Music|, Based|, New|, Lyrics|; Music)",1), ",? and|,? &", ", ")) |> 
@@ -54,10 +54,12 @@ clean_df <- df |>
 
 clean_df
 
+#Split Music_By column by comma
 new_dat <- clean_df |> 
   drop_na() |> 
   separate_longer_delim(Music_By, delim=regex(", ", ignore_case=TRUE))
 
+#Calculate most wins for a composer
 winner_dat <- new_dat |> 
   group_by(Music_By) |> 
   drop_na() |> 
@@ -71,6 +73,7 @@ winner_dat |>
   slice(1:20) |> 
   ggplot(aes(wins, fct_reorder(Music_By, wins))) + geom_point() + labs(y="Composer", x="Total Wins")
 
+#Calculate most nominations for a composer
 nom_dat <- new_dat |> 
   filter(Music_By !=" Various Artists") |> 
   group_by(Music_By) |> 
@@ -84,6 +87,7 @@ nom_dat |>
   slice(1:20) |> 
   ggplot(aes(noms, fct_reorder(Music_By, noms))) + geom_point() + labs(y="Composer", x="Total Nominations") + scale_x_continuous(limits=c(2,12), breaks = seq(2, 12, by = 1))
 
+#Calculate highest win ratio for a composer
 ratio_dat <- new_dat |> 
   group_by(Music_By) |> 
   drop_na() |> 

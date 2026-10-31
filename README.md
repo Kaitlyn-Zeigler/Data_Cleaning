@@ -2,7 +2,7 @@
 
 Data from: https://en.wikipedia.org/wiki/Tony_Award_for_Best_Musical
 
-My goal in using this dataset was three-fold: to determine the composer with the most
+My goal in using this dataset was threefold: to determine the composer with the most
 Best Musical nominations, to determine the composer with the most wins, and to calculate the highest win-ratio. 
 In order to complete this task, the dataset would require much cleaning.
 
@@ -12,7 +12,7 @@ from the 1940s to present day, which results in 9 separate tables. I then used b
 information into one single dataframe, which I called "df". The table had three columns: Year, Musical (which 
 contained the title as well as creator, composer, lyricist, choreographer, etc.), and Producer(s). 
 
-When read in from Wikipedia, each year had a row of only N/A values so I began with dropping all n/a
+When read in from Wikipedia, each year had one row of only N/A values so I began with dropping all n/a
 rows. Additionally, many of the years had additional information that wasn't useful so I shortened the
 string to only include the first 4 characters (leaving just the numeric year). The next issue was that 
 there was no column to indicate the winner for each year--in Wikipedia, the winner was simply the first listed
@@ -20,7 +20,7 @@ for the given year and was highlighted in blue. Thus, I grouped the musicals by 
 row in each group. In a mutated "Win" column, these would be indicated with a 1, while the losers would be indicated
 with a 0. I also had to take into account one exception in 1960 when there was a tie (this was done with an
 ifelse statement to check for and extract the string "TIE" from the Musical column). Finally, in order to 
-establish some consistency in the Producer(s) column, I replaced all "and"s and "&" with commas so that each
+establish some consistency in the Producer(s) column, I replaced all "and"s and "&"s with commas so that each
 name in the column used the same delimiter.
 
 After cleaning Year and Producer(s) and adding the Win column, I next focused on the Musical column, which would require
@@ -54,5 +54,6 @@ There were a few notable limitations to my process:
 every possible format (though I'm pretty confident that I was successful overall).
 * There are some instances in which a full name is given for one column but only the last name for another column due to the way that the
 information was stored initially; For example: "Juan DarienBook by Elliot Goldenthal and Julie Taymor, Music & Lyrics by Goldenthal" was 
-correctly split into Book as "Elliot Goldenthal, Julie Taymor" but Music_By and Lyrics_By only had "Goldenthal". It was difficult to attempt to replace
-the surname with the full name.
+correctly split into Book as "Elliot Goldenthal, Julie Taymor" but Music_By and Lyrics_By only had "Goldenthal". Another example is Andrew Lloyd Webber, who
+might be listed full name for book, but just Lloyd Webber for lyrics. It was difficult to attempt to replace
+the surname with the full name without causing other issues, so I left it as is. 
